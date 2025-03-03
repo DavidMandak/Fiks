@@ -1,8 +1,19 @@
-7
-11 7 29
-622 185 137
-29 20 46
-277 157 139
-182 188 41
-100000000000000000000 306 103
-9240678 7686199 9240459
+3
+4
+abc
+a
+aa
+aaa
+3
+aba
+ba
+ab
+8
+fiks
+testfiks
+fiksfiks
+fikstest
+testtest
+test
+thisisatest
+fiks
