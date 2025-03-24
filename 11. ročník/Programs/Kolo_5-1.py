@@ -5,13 +5,13 @@ lines = open("../Inputs/input (1).txt").read().splitlines()
 output = open("../Solution.txt", "w")
 
 start = time.time()
-n = 1
+pos = 1
 for _ in range(int(lines[0])):
-    s = int(lines[n])+1
+    amount = int(lines[pos])
     if not 5 <= _ <= 8:
         total = 0
         strings = defaultdict(list)
-        for seq in lines[n+1:n+s]:
+        for seq in lines[pos+1:pos+amount+1]:
             strings[len(seq)].append(seq)
         strings = sorted(strings.items())
         length = len(strings)
@@ -26,7 +26,33 @@ for _ in range(int(lines[0])):
         print(total, file=output)
     else:
         print(-1, file=output)
-    n += s
+    pos += amount+1
 print((time.time()-start))
 
-
+pos = 1
+for _ in range(int(lines[0])):
+    amount = int(lines[pos])
+    total = 0
+    strings = defaultdict(list)
+    for seq in lines[pos+1:pos+amount+1]:
+        strings[len(seq)].append(seq)
+    strings = sorted(strings.items())
+    cache = defaultdict(list)
+    length = len(strings)
+    for l in range(length-1, -1, -1):
+        for i in range(len(strings[l][1])):
+            sequence = strings[l][1][i]
+            for m in range(l, length):
+                for j in range(len(strings[m][1])):
+                    seq = strings[m][1][j]
+                    if (m, j) not in cache[(l, i)] and sequence in seq:
+                        total += 1
+                        cache[(l, i)].append((m, j))
+                        for s in cache[(m, j)]:
+                            if s == (l, i):
+                                total -= 1
+                            elif s not in cache[(l, i)]:
+                                total += 1
+                                cache[(l, i)].append(s)
+    print(total)
+    pos += amount+1
