@@ -1,6 +1,4 @@
-import math
-
-lines = open("../Inputs/test.txt").read().splitlines()
+lines = open("../test.txt").read().splitlines()
 output = open("../Solution.txt", "w")
 
 
@@ -27,8 +25,8 @@ def diagonals(k, pos, layer, start, end):
 for problem in lines[1:]:
     tiles = []
     for pos in list(map(int, problem.split())):
-        layer = int((1+math.sqrt(1+24*(pos-1)))//6)
-        end = (layer+1)*(3*(layer+1)-1)//2
+        layer = int((1+(1+24*(pos-1))**(1/2))//6)
+        end = (layer+1)*(3*layer+2)//2
         start = layer*(3*layer-1)//2+1
         if layer % 2:
             negative, positive, row = diagonals(1, pos, layer, start, end)
