@@ -5,7 +5,6 @@ output = open("../Solution.txt", "w")
 def diagonals(k, pos, layer, start, end):
     corner_a = end-layer
     corner_b = start+layer
-    c = None
     if pos >= corner_a:
         a = k*layer
         c = end-pos
@@ -17,21 +16,23 @@ def diagonals(k, pos, layer, start, end):
         c = pos-start
     else:
         b = -k*(layer-(pos-corner_b))
-        if not c:
-            c = layer
     return a, b, c
 
 
 for problem in lines[1:]:
     tiles = []
     for pos in list(map(int, problem.split())):
-        layer = int((1+(1+24*(pos-1))**(1/2))//6)
+        layer = (1+(1+24*(pos-1))**(1/2))//6
+        print(int(layer*10))
+        layer = int(layer)
+        print(layer)
         end = (layer+1)*(3*layer+2)//2
         start = layer*(3*layer-1)//2+1
         if layer % 2:
             negative, positive, row = diagonals(1, pos, layer, start, end)
         else:
             positive, negative, row = diagonals(-1, pos, layer, start, end)
+        #print(row)
         tiles.append([pos, positive, negative, row])
     check = [0]*3
     heights = []
@@ -67,15 +68,12 @@ for problem in lines[1:]:
                 else:
                     k = -1
                 print(lay*(3*lay-1)//2+1+lay+(lay+k*width)//2, file=output)
-                print("hm")
             else:
                 lay = (abs(width)+height)//2
                 if (width < 0 and lay % 2) or (width > 0 and not lay % 2):
                     print(lay*(3*lay-1)//2+1+height, file=output)
-                    print("hmh")
                 else:
                     print((lay+1)*(3*(lay+1)-1)//2-height, file=output)
-                    print("mh")
         else:
             print(0, file=output)
     else:
