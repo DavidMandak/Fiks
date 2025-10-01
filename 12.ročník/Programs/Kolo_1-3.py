@@ -1,10 +1,59 @@
 from collections import deque
 
-problems = open("../test.txt").read().splitlines()
+problems = open("../input.txt").read().splitlines()
 output = open("../Solution.txt", "w")
 line = 1
+directions = ((1, 0), (0, 1), (-1, 0), (0, -1))
 
-for i in range(int(problems[0])):
+
+def find():
+    global starts
+    while starts:
+        sx, sy = starts.popleft()
+        grid[sy][sx] = 1
+        for dx, dy in directions:
+            nx, ny = sx+dx, sy+dy
+            if 0 <= ny < height and 0 <= nx < width and not grid[ny][nx]:
+                starts.append((nx, ny))
+
+
+def check():
+    return grid[y_finish][x_finish]
+
+
+def unblock(block):
+    global starts
+    still_block = []
+    for bx, by in block:
+        unblocked = False
+        for ex, ey in explosions:
+            cx, cy = bx-ex, by-ey
+            if 0 <= cx < width and 0 <= cy < height and grid[cy][cx] == 1:
+                grid[by][bx] = 0
+                starts.append((bx, by))
+                unblocked = True
+                break
+        if not unblocked:
+            still_block.append((bx, by))
+    return still_block
+
+
+def view():
+    for y in range(len(grid)):
+        for x in range(len(grid[y])):
+            if grid[y][x] == 2:
+                print(0, end="")
+            elif grid[y][x] == 1:
+                print(end="E")
+            elif (x, y) == (x_finish, y_finish):
+                print(end="X")
+            else:
+                print(end=" ")
+        print()
+    print()
+
+
+for _ in range(int(problems[0])):
     width, height = (map(int, problems[line].split()))
     x_finish, y_finish = (map(int, problems[line+1].split()))
 
@@ -12,23 +61,25 @@ for i in range(int(problems[0])):
     edge = 1
     width += 2*edge
     height += 2*edge
+    x_finish += edge
+    y_finish += edge
     grid = []
     for y in range(height):
         grid.append(width*[0])
+
     explosion_map = [h.split() for h in problems[line:line+5]]
-    explosion = []
+    explosions = []
     for y in range(5):
         for x in range(5):
             if explosion_map[y][x] == "x" and (y, x) != (2, 2):
-                explosion.append((x-2, y-2))
+                explosions.append((x-2, y-2))
 
     line += 5
+    blocked = []
     for x, y in [(map(int, obstacle.split())) for obstacle in problems[line+1:line+int(problems[line])+1]]:
-        grid[y+1][x+1] = 2
+        grid[y+edge][x+edge] = 2
+        blocked.append((x+edge, y+edge))
     line += int(problems[line])+1
-    for y in grid:
-        print(y)
-    print()
 
     starts = deque()
     for y in range(1, height-1):
@@ -38,17 +89,25 @@ for i in range(int(problems[0])):
         starts.append((x, 0))
         starts.append((x, height-1))
 
+    if not explosions:
+        find()
+        if check():
+            print(0, file=output)
+            print(0)
+        else:
+            print("ajajaj", file=output)
+            print("ajajaj")
+        continue
+
     count = 0
     while True:
-        directions = ((1, 0), (0, 1), (-1, 0), (0, -1))
-        while starts:
-            sx, sy = starts.popleft()
-            grid[sy][sx] = 1
-            for dx, dy in directions:
-                if not grid[sy+dy][sx+dx]:
-                    starts.append((sx+dx, sy+dy))
+        find()
 
-        if grid[y_finish][x_finish]:
+        if check():
             print(count, file=output)
+            print(count)
+            break
 
+        blocked = unblock(blocked)
 
+        count += 1
