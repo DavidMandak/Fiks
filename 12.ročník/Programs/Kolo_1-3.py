@@ -21,21 +21,16 @@ def check():
     return grid[y_finish][x_finish]
 
 
-def unblock(block):
-    global starts
-    still_block = []
-    for bx, by in block:
-        unblocked = False
-        for ex, ey in explosions:
-            cx, cy = bx-ex, by-ey
-            if 0 <= cx < width and 0 <= cy < height and grid[cy][cx] == 1:
-                grid[by][bx] = 0
-                starts.append((bx, by))
-                unblocked = True
-                break
-        if not unblocked:
-            still_block.append((bx, by))
-    return still_block
+def unblock():
+    global grid, starts
+    for y in range(len(grid)):
+        for x in range(len(grid[y])):
+            if grid[y][x] == 1:
+                grid[y][x] = 3
+                for ux, uy in unblock_grid[y][x]:
+                    if grid[uy][ux] == 2:
+                        grid[uy][ux] = 0
+                        starts.append((ux, uy))
 
 
 def view():
@@ -64,8 +59,12 @@ for _ in range(int(problems[0])):
     x_finish += edge
     y_finish += edge
     grid = []
+    unblock_grid = []
     for y in range(height):
         grid.append(width*[0])
+        unblock_grid.append([])
+        for x in range(width):
+            unblock_grid[y].append([])
 
     explosion_map = [h.split() for h in problems[line:line+5]]
     explosions = []
@@ -99,6 +98,12 @@ for _ in range(int(problems[0])):
             print("ajajaj")
         continue
 
+    for bx, by in blocked:
+        for ex, ey in explosions:
+            cx, cy = bx-ex, by-ey
+            if 0 <= cx < width and 0 <= cy < height:
+                unblock_grid[cy][cx].append((bx, by))
+
     count = 0
     while True:
         find()
@@ -108,6 +113,6 @@ for _ in range(int(problems[0])):
             print(count)
             break
 
-        blocked = unblock(blocked)
+        unblock()
 
         count += 1
