@@ -6,7 +6,7 @@ line = 1
 directions = ((1, 0), (0, 1), (-1, 0), (0, -1))
 
 
-def find():
+def find() -> None:
     global starts
     while starts:
         sx, sy = starts.popleft()
@@ -17,11 +17,11 @@ def find():
                 starts.append((nx, ny))
 
 
-def check():
+def check() -> int:
     return grid[y_finish][x_finish]
 
 
-def unblock():
+def unblock() -> None:
     global grid, starts
     for y in range(len(grid)):
         for x in range(len(grid[y])):
@@ -33,7 +33,7 @@ def unblock():
                         starts.append((ux, uy))
 
 
-def view():
+def view() -> None:
     for y in range(len(grid)):
         for x in range(len(grid[y])):
             if grid[y][x] == 2:

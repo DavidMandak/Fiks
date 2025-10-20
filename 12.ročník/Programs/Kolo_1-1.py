@@ -2,7 +2,7 @@ lines = [list(map(int, line.split())) for line in open("../input.txt").read().sp
 output = open("../Solution.txt", "w")
 
 
-def gcd(a, b):
+def gcd(a, b) -> int:
     if b > a:
         temp = a
         a = b

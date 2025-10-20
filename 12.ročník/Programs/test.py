@@ -1,3 +1,8 @@
+a = [0, 1, 2, 3, 4, 5]
+b = a
+a[2] += 1
+print(a)
+print(b)
 import sys
 from collections import deque
 
