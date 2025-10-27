@@ -2,40 +2,31 @@ lines = open("../input.txt").read().splitlines()
 output = open("../Solution.txt", "w")
 
 
-def prime_check(n: int) -> bool:
-    global primes
-    threshold = int(n**(1/2))
-    for prime in primes[1:]:
-        if prime > threshold:
-            return True
-        if not n % prime:
-            return False
-    return True
-
-
 def get_index(num: int) -> int:
-    if num > primes[-1]:
-        for n in range(primes[-1]+1, num+1):
-            if prime_check(n):
-                primes.append(n)
-        return len(primes)-1
-    elif num < primes[-1]:
-        s = 0
-        e = len(primes)-1
-        while s != e:
-            m = (s+e)//2
-            if num < primes[m]:
-                e = m
-            elif num > primes[m]:
-                s = m+1
-            else:
-                return m
-        return s-1
-    else:
-        return len(primes)-1
+    s = 0
+    e = len(primes)-1
+    while s != e:
+        m = (s+e)//2
+        if num < primes[m]:
+            e = m
+        elif num > primes[m]:
+            s = m+1
+        else:
+            return m
+    return s-1
 
 
-primes = [1]
+limit = 10**6+100
+is_prime = [True]*(limit+1)
+is_prime[0] = False
+p = 2
+while p*p <= limit:
+    if is_prime[p]:
+        for multiple in range(p*p, limit+1, p):
+            is_prime[multiple] = False
+    p += 1
+primes = [i for i, prime_status in enumerate(is_prime) if prime_status]
+
 for line in range(2, len(lines), 2):
     original_sequence = list(map(int, lines[line].split()))
     prime_sequence = []
