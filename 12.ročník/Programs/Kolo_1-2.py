@@ -114,7 +114,7 @@ def solve(loops: list, goal: int, t: int) -> int:
 
 
 if __name__ == "__main__":
-    lines = open("input.txt").read().splitlines()
+    lines = open("../input.txt").read().splitlines()
     output = open("Solution.txt", "w")
     for line in range(1, 2*int(lines[0])+1, 2):
         amount, goal, t = map(int, lines[line].split())
