@@ -1,6 +1,5 @@
 from collections import deque
 import time
-from Chat import a
 
 
 def main() -> None:
@@ -30,10 +29,6 @@ def main() -> None:
 
         if m == n-1:
             result = tree_solve(n, node_paths, sets)
-            #chat = a(n, node_paths, sets)
-            #print(list(result))
-            #print(chat)
-
         else:
             result = djikstra_solve(n, node_paths, sets)
         print("\n".join(result), file=output)
@@ -43,15 +38,15 @@ def tree_solve(n: int, node_paths: list, sets: list) -> list:
     root = 0
     parent = [None]*n
     parent[root] = -1
-    bfs = deque([root])
-    level_order = []
-    while bfs:
-        u = bfs.pop()
-        level_order.append(u)
+    stack = [root]
+    pre_order = []
+    while stack:
+        u = stack.pop()
+        pre_order.append(u)
         for v, w in node_paths[u]:
             if parent[v] is None:
                 parent[v] = u
-                bfs.appendleft(v)
+                stack.append(v)
 
     for S in sets:
         k = len(S)
@@ -61,8 +56,8 @@ def tree_solve(n: int, node_paths: list, sets: list) -> list:
             subtree_count[v] = 1
 
         subtree_reachability = [0]*n
-        for i in range(len(level_order)-1, -1, -1):
-            u = level_order[i]
+        for i in range(len(pre_order)-1, -1, -1):
+            u = pre_order[i]
             for v, w in node_paths[u]:
                 if parent[v] == u:
                     subtree_count[u] += subtree_count[v]
@@ -70,7 +65,7 @@ def tree_solve(n: int, node_paths: list, sets: list) -> list:
 
         reachability = [0]*n
         reachability[root] = subtree_reachability[root]
-        for u in level_order:
+        for u in pre_order:
             for v, w in node_paths[u]:
                 if parent[v] == u:
                     # reachability[v] = reachability[u]-subtree_count[v]*w+(k-subtree_count[v])*w
@@ -109,3 +104,5 @@ s = time.time()
 if __name__ == "__main__":
     main()
 print(time.time()-s)
+
+import Check
