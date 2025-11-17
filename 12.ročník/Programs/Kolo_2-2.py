@@ -1,4 +1,4 @@
-from collections import deque
+import heapq
 import time
 
 
@@ -79,12 +79,12 @@ def djikstra_solve(n: int, node_paths: list, sets: list) -> list:
         reachability = [0]*n
 
         for source in S:
-            bfs = deque([(source, 0)])
+            bfs = [(0, source)]
             distances = [None]*n
             distances[source] = 0
 
             while bfs:
-                node, dist = bfs.pop()
+                node, dist = heapq.heappop(bfs)
 
                 if dist == distances[node]:
                     for v, w in node_paths[node]:
@@ -92,7 +92,7 @@ def djikstra_solve(n: int, node_paths: list, sets: list) -> list:
                         check_d = dist+w
                         if curr_d is None or check_d < curr_d:
                             distances[v] = check_d
-                            bfs.appendleft((v, check_d))
+                            heapq.heappush(bfs, (check_d, v))
 
             for i in range(n):
                 reachability[i] += distances[i]
