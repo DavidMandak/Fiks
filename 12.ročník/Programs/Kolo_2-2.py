@@ -1,5 +1,4 @@
 import heapq
-import time
 
 
 def main() -> None:
@@ -8,8 +7,6 @@ def main() -> None:
     line = 1
 
     for _ in range(int(lines[0])):
-        if _ == 25:
-            break
         n, m = map(int, lines[line].split())
         node_paths = [[] for __ in range(n)]
 
@@ -68,7 +65,7 @@ def tree_solve(n: int, node_paths: list, sets: list) -> list:
         for v in pre_order:
             for u, w in node_paths[v]:
                 if parent[u] == v:
-                    # reachability[v] = reachability[u]-subtree_count[v]*w+(k-subtree_count[v])*w
+                    # reachability[u] = reachability[v]-subtree_count[u]*w+(k-subtree_count[u])*w
                     reachability[u] = reachability[v]+w*(k-2*subtree_count[u])
 
         yield str(min(reachability))
@@ -99,9 +96,5 @@ def djikstra_solve(n: int, node_paths: list, sets: list) -> list:
         yield str(min(reachability))
 
 
-s = time.time()
 if __name__ == "__main__":
     main()
-print(time.time()-s)
-
-import Check
