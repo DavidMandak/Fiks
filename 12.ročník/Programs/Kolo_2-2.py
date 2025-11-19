@@ -4,9 +4,10 @@ import heapq
 def main() -> None:
     lines = open("../input.txt").read().splitlines()
     output = open("../Solution.txt", "w")
+    t = int(lines[0])
     line = 1
 
-    for _ in range(int(lines[0])):
+    for _ in range(t):
         n, m = map(int, lines[line].split())
         node_paths = [[] for __ in range(n)]
 
